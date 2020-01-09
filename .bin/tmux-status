@@ -1,0 +1,121 @@
+#!/bin/sh
+#        ██
+#       ░██
+#      ██████ ██████████  ██   ██ ██   ██
+#     ░░░██░ ░░██░░██░░██░██  ░██░░██ ██
+#       ░██   ░██ ░██ ░██░██  ░██ ░░███
+#       ░██   ░██ ░██ ░██░██  ░██  ██░██
+#       ░░██  ███ ░██ ░██░░██████ ██ ░░██
+#        ░░  ░░░  ░░  ░░  ░░░░░░ ░░   ░░
+#           ██               ██
+#          ░██              ░██
+#  ██████ ██████  ██████   ██████ ██   ██  ██████
+# ██░░░░ ░░░██░  ░░░░░░██ ░░░██░ ░██  ░██ ██░░░░
+#░░█████   ░██    ███████   ░██  ░██  ░██░░█████
+# ░░░░░██  ░██   ██░░░░██   ░██  ░██  ░██ ░░░░░██
+# ██████   ░░██ ░░████████  ░░██ ░░██████ ██████
+#░░░░░░     ░░   ░░░░░░░░    ░░   ░░░░░░ ░░░░░░
+#
+#  ▓▓▓▓▓▓▓▓▓▓
+# ░▓ author ▓ xero <x@xero.nu>
+# ░▓ code   ▓ http://code.xero.nu/dotfiles
+# ░▓ mirror ▓ http://git.io/.files
+# ░▓▓▓▓▓▓▓▓▓▓
+# ░░░░░░░░░░
+
+. $HOME/.cache/wal/colors.sh
+
+FULL=▓
+EMPTY=░
+EOL=▒ 
+SIZE=7
+C0="$color0"
+C1="$color1"
+C2="$color2"
+C3="$color3"
+C4="$color4"
+C5="$color5"
+C6="$color6"
+C7="$color7"
+
+draw()
+{
+	perc=$1
+	SIZE=$2
+	inc=$(( perc * SIZE / 100 ))
+	out=
+	thiscolor=
+	for v in `seq 0 $(( SIZE - 1 ))`; do
+		test "$v" -le "$inc"   \
+		&& out="${out}#[fg=$C1]${FULL}" \
+		|| out="${out}#[fg=$C1]${EMPTY}"
+	done
+	echo $out
+}
+temp()
+{
+	t=$(sensors | awk '/Core\ 0/ {gsub(/\+/,"",$3); gsub(/\..+/,"",$3)    ; print $3}')
+	tc=$C0
+	case 1 in
+		$((t <= 50)))
+			tc=$C2
+			;;
+		$((t >= 75)))
+			tc=$C3
+			;;
+	esac
+	echo "#[fg=$tc]$t°c"
+}
+bat()
+{
+	BATPATH=/sys/class/power_supply/BAT0
+	STATUS=$BATPATH/status
+	BAT_FULL=$BATPATH/charge_full
+	BAT_NOW=$BATPATH/charge_now
+	bf=$(cat $BAT_FULL)
+	bn=$(cat $BAT_NOW)
+	bp=$(( 100 * $bn / $bf ))
+	stat=$(cat $STATUS)
+	case $stat in
+		Full)
+			st="="
+			;;
+		Discharging)
+			st="-"
+			;;
+		Charging)
+			st="+"
+			;;
+	esac
+	test "$bp" -lt 10  \
+	&& bc=$C3 \
+	|| bc=$C1
+	echo $st#[fg=$bc]$bp"%"
+}
+cpu()
+{
+	CPU_USE=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}')
+	printf "%.0f" $CPU_USE
+}
+ram()
+{
+	free | awk '/Mem:/ {print int($3/$2 * 100.0)}'
+}
+vpn()
+{
+	pgrep openconnect >/dev/null 2>&1 && echo "#[fg=3]VPN"
+}
+clock()
+{
+	mtime=$(date +'%I:%M ')
+	myear=$(date +'%a %b %d,')
+	mday=$(date +'%d')
+	echo "#[fg=$C4]#[bg=$C0] $myear #[fg=$C4]$mtime#[fg=$C4]$EOL"
+}
+front()
+{
+	echo "#[bg=$C4]#[fg=0]▓░"
+}
+CPU_INFO=`cpu`
+RAM_INFO=`ram`
+echo `front` `clock`
