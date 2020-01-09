@@ -5,4 +5,4 @@
 https://voidlinux.org/
 
 
-<a href="https://github.com/ChefIronBelly/void/blob/master/chef/moneyshot-min.jpg"><img src="https://github.com/ChefIronBelly/void/blob/master/chef/moneyshot-min.jpg" width="43%" align="right"></a>
+<a href="https://github.com/ChefIronBelly/void/blob/master/moneyshot-min.jpg"><img src="https://github.com/ChefIronBelly/void/blob/master/moneyshot-min.jpg" width="43%" align="right"></a>
