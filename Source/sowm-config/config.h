@@ -14,6 +14,8 @@ const char* surfcmd[] = {"firefox", "https://news.google.com", 0};
 const char* geanycmd[] = {"geany", 0};
 const char* somacmd[] = {"dmenu_soma.sh", 0};
 
+
+
 static struct key keys[] = {
     {MOD,      XK_q,   win_kill,   {0}},
     {MOD,      XK_c,   win_center, {0}},
@@ -32,6 +34,15 @@ static struct key keys[] = {
     {Mod1Mask|ShiftMask, XK_f, run,   {.com = surfcmd}},
     {Mod1Mask|ShiftMask, XK_g, run,   {.com = geanycmd}},
     {Mod1Mask|ShiftMask, XK_r, run,   {.com = somacmd}},   
+    
+    {MOD,           XK_h,      move,  {.com=(char*[]){"move", "left"}, .i=10}},
+	{MOD,           XK_j,      move,  {.com=(char*[]){"move", "down"}, .i=10}},
+	{MOD,           XK_k,      move,  {.com=(char*[]){"move", "up"}, .i=10}},
+	{MOD,           XK_l,      move,  {.com=(char*[]){"move", "right"}, .i=10}},
+	{MOD|ShiftMask, XK_h,      move,  {.com=(char*[]){"resize", "left"}, .i=10}},
+	{MOD|ShiftMask, XK_j,      move,  {.com=(char*[]){"resize", "down"}, .i=10}},
+	{MOD|ShiftMask, XK_k,      move,  {.com=(char*[]){"resize", "up"}, .i=10}},
+	{MOD|ShiftMask, XK_l,      move,  {.com=(char*[]){"resize", "right"}, .i=10}},
 
     {MOD,           XK_1, ws_go,     {.i = 1}},
     {MOD|ShiftMask, XK_1, win_to_ws, {.i = 1}},
