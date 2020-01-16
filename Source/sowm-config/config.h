@@ -3,6 +3,8 @@
 
 #define MOD Mod4Mask
 
+static int gap = 20;	/* gap around windows */
+
 const char* menu[]    = {"dmenu_run",      0};
 const char* term[]    = {"st",             0};
 const char* scrot[]   = {"scr",            0};
