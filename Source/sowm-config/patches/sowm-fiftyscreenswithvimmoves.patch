@@ -1,0 +1,104 @@
+--- sowm.c.org	2020-01-15 03:01:00.000000000 -0500
++++ sowm.c	2020-01-16 08:55:45.144577683 -0500
+@@ -7,8 +7,9 @@
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <unistd.h>
++#include <stdio.h>
+ 
+-typedef union {
++typedef struct {
+     const char** com;
+     const int i;
+     const Window w;
+@@ -39,6 +40,10 @@
+ static void run(const Arg arg);
+ static void win_add(Window w);
+ static void win_center();
++static void win_l_fifty();
++static void win_r_fifty();
++static void win_t_fifty();
++static void win_b_fifty();
+ static void win_del(Window w);
+ static void win_fs();
+ static void win_kill();
+@@ -46,6 +51,8 @@
+ static void win_next();
+ static void win_to_ws(const Arg arg);
+ static void ws_go(const Arg arg);
++static void apply(int x, int y, int w, int h);
++static void move(const Arg arg);
+ static int  xerror() { return 0;}
+ 
+ static client       *list = {0}, *ws_list[10] = {0}, *cur;
+@@ -76,6 +83,31 @@
+     XGetGeometry(d, W, &(Window){0}, gx, gy, gw, gh, \
+                  &(unsigned int){0}, &(unsigned int){0})
+ 
++void apply(int x,int y,int w,int h) {
++    win_size(cur->w, &wx, &wy, &ww, &wh);
++    XMoveResizeWindow(d, cur->w,
++        wx + x,
++        wy + y,
++        ww + w,
++			  wh + h);
++    win_size(cur->w, &wx, &wy, &ww, &wh);
++}
++
++void move(const Arg arg) {
++	 if(arg.com[1]=="left") {
++        apply((arg.com[0]=="resize")?arg.i:-arg.i, 0, (arg.com[0]=="resize")?-arg.i:0, 0);
++    }
++    else if(arg.com[1]=="right"){
++        apply((arg.com[0]=="resize")?-arg.i:arg.i, 0, (arg.com[0]=="resize")?arg.i:0, 0);
++    }
++    else if(arg.com[1]=="up"){
++        apply(0, (arg.com[0]=="resize")?arg.i:-arg.i, 0, (arg.com[0]=="resize")?-arg.i:0);
++    }
++    else if(arg.com[1]=="down"){
++        apply(0, (arg.com[0]=="resize")?-arg.i:arg.i, 0, (arg.com[0]=="resize")?arg.i:0);
++    }
++}
++
+ void win_focus(client *c) {
+     cur = c;
+     XSetInputFocus(d, cur->w, RevertToParent, CurrentTime);
+@@ -126,6 +158,7 @@
+ }
+ 
+ void button_release() {
++	win_size(cur->w, &wx, &wy, &ww, &wh);	
+     mouse.subwindow = 0;
+ }
+ 
+@@ -178,6 +211,30 @@
+     XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
+ }
+ 
++void win_l_fifty() {
++    if (!cur) return;
++	int gap = 20;
++        XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 - gap, sh - 2*gap);
++}
++
++void win_r_fifty() {
++    if (!cur) return;
++	int gap = 20;
++        XMoveResizeWindow(d, cur->w, sw /2 +gap, 0 +gap, sw/2 - 2*gap, sh - 2*gap);
++}
++
++void win_t_fifty() {
++    if (!cur) return;
++	int gap = 20;
++        XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw - 2*gap, sh /2 - gap);
++}
++
++void win_b_fifty() {
++    if (!cur) return;
++	int gap = 20;
++        XMoveResizeWindow(d, cur->w, 0 +gap, sh /2 +gap, sw - 2*gap, sh /2 - 2*gap);
++}
++
+ void win_fs() {
+     if (!cur) return;
+ 
