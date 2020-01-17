@@ -16,7 +16,7 @@ const char* volup[]   = {"amixer", "sset", "Master", "5%+",         0};
 const char* volmute[] = {"amixer", "sset", "Master", "toggle",      0};
 const char* colors[]  = {"bud", "/home/chef/Pictures/Wallpapers", 0};
 const char* surfcmd[] = {"firefox", "https://news.google.com", 0};
-const char* geanycmd[] = {"geany", 0};
+const char* editcmd[] = {"geany", 0};
 const char* somacmd[] = {"dmenu_soma.sh", 0};
 
 static struct key keys[] = {
@@ -48,7 +48,7 @@ static struct key keys[] = {
     {MOD, XK_F11,    run, {.com = volup}},
     {MOD, XK_F12,    run, {.com = volmute}},
     {Mod1Mask|ShiftMask, XK_f, run,   {.com = surfcmd}},
-    {Mod1Mask|ShiftMask, XK_g, run,   {.com = geanycmd}},
+    {Mod1Mask|ShiftMask, XK_g, run,   {.com = editcmd}},
     {Mod1Mask|ShiftMask, XK_r, run,   {.com = somacmd}},
 
     {MOD,           XK_1, ws_go,     {.i = 1}},
