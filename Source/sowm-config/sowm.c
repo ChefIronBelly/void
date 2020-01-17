@@ -214,25 +214,25 @@ void win_center() {
 void win_l_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 - gap, sh - 2*gap);
+        XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 -gap +mas, sh - 2*gap);
 }
 
 void win_r_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, sw/2 +gap, 0 +gap, sw/2 - 2*gap, sh - 2*gap);
+        XMoveResizeWindow(d, cur->w, sw/2 +gap + mas, 0 +gap, sw/2 - 2*gap -mas, sh -2*gap);
 }
 
 void win_t_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, sw/2 +gap, 0 +gap, sw/2 - 2*gap, sh/2 - gap);
+        XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, 0 +gap, sw/2 - 2*gap -mas, sh/2 -gap);
 }
 
 void win_b_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, sw/2 +gap, sh/2 +gap, sw/2 - 2*gap, sh/2 - 2*gap);
+        XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, sh/2 +gap, sw/2 - 2*gap -mas, sh/2 - 2*gap);
 }
 
 void win_fs() {
