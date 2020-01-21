@@ -23,10 +23,10 @@ static struct key keys[] = {
     {MOD,      XK_q,   win_kill,   {0}},
     {MOD,      XK_c,   win_center, {0}},
     {MOD,      XK_f,   win_fs,     {0}},
-    {MOD,      XK_n,   win_l_fifty,{0}},    
+    {MOD,      XK_n,   win_l_fifty,{0}},
     {MOD,      XK_m,   win_r_fifty,{0}},
     {MOD,      XK_t,   win_t_fifty,{0}},
-    {MOD,      XK_b,   win_b_fifty,{0}},	
+    {MOD,      XK_b,   win_b_fifty,{0}},
     {MOD,      	    XK_h,      move,  {.com=(char*[]){"move", "left"}, .i=10}},
     {MOD,           XK_j,      move,  {.com=(char*[]){"move", "down"}, .i=10}},
     {MOD,           XK_k,      move,  {.com=(char*[]){"move", "up"}, .i=10}},
@@ -34,8 +34,8 @@ static struct key keys[] = {
     {MOD|ShiftMask, XK_h,      move,  {.com=(char*[]){"resize", "left"}, .i=10}},
     {MOD|ShiftMask, XK_j,      move,  {.com=(char*[]){"resize", "down"}, .i=10}},
     {MOD|ShiftMask, XK_k,      move,  {.com=(char*[]){"resize", "up"}, .i=10}},
-    {MOD|ShiftMask, XK_l,      move,  {.com=(char*[]){"resize", "right"}, .i=10}},    
-    
+    {MOD|ShiftMask, XK_l,      move,  {.com=(char*[]){"resize", "right"}, .i=10}},
+
     {Mod1Mask,           XK_Tab, win_next,   {0}},
     {Mod1Mask|ShiftMask, XK_Tab, win_prev,   {0}},
 
