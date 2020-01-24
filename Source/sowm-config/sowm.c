@@ -7,53 +7,8 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
-#include <stdio.h>
 
-typedef struct {
-    const char** com;
-    const int i;
-    const Window w;
-} Arg;
-
-struct key {
-    unsigned int mod;
-    KeySym keysym;
-    void (*function)(const Arg arg);
-    const Arg arg;
-};
-
-typedef struct client {
-    struct client *next, *prev;
-    int f, wx, wy;
-    unsigned int ww, wh;
-    Window w;
-} client;
-
-static void button_press(XEvent *e);
-static void button_release();
-static void configure_request(XEvent *e);
-static void key_press(XEvent *e);
-static void map_request(XEvent *e);
-static void notify_destroy(XEvent *e);
-static void notify_enter(XEvent *e);
-static void notify_motion(XEvent *e);
-static void run(const Arg arg);
-static void win_add(Window w);
-static void win_center();
-static void win_l_fifty();
-static void win_r_fifty();
-static void win_t_fifty();
-static void win_b_fifty();
-static void win_del(Window w);
-static void win_fs();
-static void win_kill();
-static void win_prev();
-static void win_next();
-static void win_to_ws(const Arg arg);
-static void ws_go(const Arg arg);
-static void apply(int x, int y, int w, int h);
-static void move(const Arg arg);
-static int  xerror() { return 0;}
+#include "sowm.h"
 
 static client       *list = {0}, *ws_list[10] = {0}, *cur;
 static int          ws = 1, sw, sh, wx, wy, numlock = 0;
@@ -74,43 +29,6 @@ static void (*events[LASTEvent])(XEvent *e) = {
 };
 
 #include "config.h"
-
-#define win        (client *t=0, *c=list; c && t!=list->prev; t=c, c=c->next)
-#define ws_save(W) ws_list[W] = list
-#define ws_sel(W)  list = ws_list[ws = W]
-
-#define win_size(W, gx, gy, gw, gh) \
-    XGetGeometry(d, W, &(Window){0}, gx, gy, gw, gh, \
-                 &(unsigned int){0}, &(unsigned int){0})
-
-// Taken from DWM. Many thanks. https://git.suckless.org/dwm
-#define mod_clean(mask) (mask & ~(numlock|LockMask) & \
-        (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-
-void apply(int x,int y,int w,int h) {
-    win_size(cur->w, &wx, &wy, &ww, &wh);
-    XMoveResizeWindow(d, cur->w,
-        wx + x,
-        wy + y,
-        ww + w,
-			  wh + h);
-    win_size(cur->w, &wx, &wy, &ww, &wh);
-}
-
-void move(const Arg arg) {
-	 if(arg.com[1]=="left") {
-        apply((arg.com[0]=="resize")?arg.i:-arg.i, 0, (arg.com[0]=="resize")?-arg.i:0, 0);
-    }
-    else if(arg.com[1]=="right"){
-        apply((arg.com[0]=="resize")?-arg.i:arg.i, 0, (arg.com[0]=="resize")?arg.i:0, 0);
-    }
-    else if(arg.com[1]=="up"){
-        apply(0, (arg.com[0]=="resize")?arg.i:-arg.i, 0, (arg.com[0]=="resize")?-arg.i:0);
-    }
-    else if(arg.com[1]=="down"){
-        apply(0, (arg.com[0]=="resize")?-arg.i:arg.i, 0, (arg.com[0]=="resize")?arg.i:0);
-    }
-}
 
 void win_focus(client *c) {
     cur = c;
@@ -161,8 +79,7 @@ void button_press(XEvent *e) {
     mouse = e->xbutton;
 }
 
-void button_release() {
-	win_size(cur->w, &wx, &wy, &ww, &wh);	
+void button_release(XEvent *e) {
     mouse.subwindow = 0;
 }
 
@@ -203,43 +120,42 @@ void win_del(Window w) {
     ws_save(ws);
 }
 
-void win_kill() {
+void win_kill(const Arg arg) {
     if (cur) XKillClient(d, cur->w);
 }
 
-void win_center() {
+void win_center(const Arg arg) {
     if (!cur) return;
 
     win_size(cur->w, &(int){0}, &(int){0}, &ww, &wh);
-
     XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
 }
 
 void win_l_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 -gap +mas, sh - 2*gap);
+    XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 -gap +mas, sh - 2*gap);
 }
 
 void win_r_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, sw/2 +gap + mas, 0 +gap, sw/2 - 2*gap -mas, sh -2*gap);
+    XMoveResizeWindow(d, cur->w, sw/2 +gap + mas, 0 +gap, sw/2 - 2*gap -mas, sh -2*gap);
 }
 
 void win_t_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, 0 +gap, sw/2 - 2*gap -mas, sh/2 -gap);
+    XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, 0 +gap, sw/2 - 2*gap -mas, sh/2 -gap);
 }
 
 void win_b_fifty() {
     if (!cur) return;
 
-        XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, sh/2 +gap, sw/2 - 2*gap -mas, sh/2 - 2*gap);
+    XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, sh/2 +gap, sw/2 - 2*gap -mas, sh/2 - 2*gap);
 }
 
-void win_fs() {
+void win_fs(const Arg arg) {
     if (!cur) return;
 
     if ((cur->f = cur->f ? 0 : 1)) {
@@ -267,14 +183,14 @@ void win_to_ws(const Arg arg) {
     if (list) win_focus(list);
 }
 
-void win_prev() {
+void win_prev(const Arg arg) {
     if (!cur) return;
 
     XRaiseWindow(d, cur->prev->w);
     win_focus(cur->prev);
 }
 
-void win_next() {
+void win_next(const Arg arg) {
     if (!cur) return;
 
     XRaiseWindow(d, cur->next->w);
@@ -321,7 +237,7 @@ void map_request(XEvent *e) {
     win_add(w);
     cur = list->prev;
 
-    if (wx + wy == 0) win_center();
+    if (wx + wy == 0) win_center((Arg){0});
 
     XMapWindow(d, w);
     win_focus(list->prev);
@@ -341,8 +257,8 @@ void input_grab(Window root) {
     KeyCode code;
 
     for (i = 0; i < 8; i++)
-        for (j=0; j < modmap->max_keypermod; j++)
-            if (modmap->modifiermap[i * modmap->max_keypermod + j]
+        for (int k = 0; k < modmap->max_keypermod; k++)
+            if (modmap->modifiermap[i * modmap->max_keypermod + k]
                 == XKeysymToKeycode(d, 0xff7f))
                 numlock = (1 << i);
 
