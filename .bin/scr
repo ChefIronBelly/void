@@ -1,14 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/sh
 #
 # Take a screenshot.
 
 scr_dir=~/Pictures/Screenshots
 
-printf -v date '%(%F)T' -1
-printf -v time '%(%I-%M-%S)T' -1
+date=$(date +%F)
+time=$(date +%I-%M-%S)
+file=$scr_dir/$date/$date-$time.jpg
 
 mkdir -p "$scr_dir/$date"
-scr=$scr_dir/$date/$date-$time
-
-import -window root "$scr".jpg
-cp -f "$scr".jpg "$scr_dir/current.jpg"
+import -window root "$file"
+cp -f "$file" "$scr_dir/moneyshot.jpg"
