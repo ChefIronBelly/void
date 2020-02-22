@@ -3,6 +3,7 @@
 #define win        (client *t=0, *c=list; c && t!=list->prev; t=c, c=c->next)
 #define ws_save(W) ws_list[W] = list
 #define ws_sel(W)  list = ws_list[ws = W]
+#define MAX(a, b)  ((a) > (b) ? (a) : (b))
 
 #define win_size(W, gx, gy, gw, gh) \
     XGetGeometry(d, W, &(Window){0}, gx, gy, gw, gh, \
@@ -12,7 +13,7 @@
 #define mod_clean(mask) (mask & ~(numlock|LockMask) & \
         (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
 
-typedef union {
+typedef struct {
     const char** com;
     const int i;
     const Window w;
@@ -44,10 +45,10 @@ void notify_motion(XEvent *e);
 void run(const Arg arg);
 void win_add(Window w);
 void win_center(const Arg arg);
-void win_l_fifty();
-void win_r_fifty();
-void win_t_fifty();
-void win_b_fifty();
+void win_l_fifty(const Arg arg);
+void win_r_fifty(const Arg arg);
+void win_t_fifty(const Arg arg);
+void win_b_fifty(const Arg arg);
 void win_del(Window w);
 void win_fs(const Arg arg);
 void win_focus(client *c);
@@ -56,4 +57,5 @@ void win_prev(const Arg arg);
 void win_next(const Arg arg);
 void win_to_ws(const Arg arg);
 void ws_go(const Arg arg);
-int  xerror() { return 0; }
+
+static int xerror() { return 0; }

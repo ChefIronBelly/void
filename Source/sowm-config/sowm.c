@@ -16,6 +16,7 @@ static unsigned int ww, wh;
 
 static Display      *d;
 static XButtonEvent mouse;
+static Window       root;
 
 static void (*events[LASTEvent])(XEvent *e) = {
     [ButtonPress]      = button_press,
@@ -58,8 +59,8 @@ void notify_motion(XEvent *e) {
     XMoveResizeWindow(d, mouse.subwindow,
         wx + (mouse.button == 1 ? xd : 0),
         wy + (mouse.button == 1 ? yd : 0),
-        ww + (mouse.button == 3 ? xd : 0),
-        wh + (mouse.button == 3 ? yd : 0));
+        MAX(1, ww + (mouse.button == 3 ? xd : 0)),
+        MAX(1, wh + (mouse.button == 3 ? yd : 0)));
 }
 
 void key_press(XEvent *e) {
@@ -131,25 +132,25 @@ void win_center(const Arg arg) {
     XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
 }
 
-void win_l_fifty() {
+void win_l_fifty(const Arg arg) {
     if (!cur) return;
 
     XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 -gap +mas, sh - 2*gap);
 }
 
-void win_r_fifty() {
+void win_r_fifty(const Arg arg) {
     if (!cur) return;
 
     XMoveResizeWindow(d, cur->w, sw/2 +gap + mas, 0 +gap, sw/2 - 2*gap -mas, sh -2*gap);
 }
 
-void win_t_fifty() {
+void win_t_fifty(const Arg arg) {
     if (!cur) return;
 
     XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, 0 +gap, sw/2 - 2*gap -mas, sh/2 -gap);
 }
 
-void win_b_fifty() {
+void win_b_fifty(const Arg arg) {
     if (!cur) return;
 
     XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, sh/2 +gap, sw/2 - 2*gap -mas, sh/2 - 2*gap);
@@ -162,8 +163,9 @@ void win_fs(const Arg arg) {
         win_size(cur->w, &cur->wx, &cur->wy, &cur->ww, &cur->wh);
         XMoveResizeWindow(d, cur->w, 0, 0, sw, sh);
 
-    } else
+    } else {
         XMoveResizeWindow(d, cur->w, cur->wx, cur->wy, cur->ww, cur->wh);
+	}
 }
 
 void win_to_ws(const Arg arg) {
@@ -285,10 +287,10 @@ int main(void) {
     signal(SIGCHLD, SIG_IGN);
     XSetErrorHandler(xerror);
 
-    int s       = DefaultScreen(d);
-    Window root = RootWindow(d, s);
-    sw          = XDisplayWidth(d, s);
-    sh          = XDisplayHeight(d, s);
+    int s = DefaultScreen(d);
+    root  = RootWindow(d, s);
+    sw    = XDisplayWidth(d, s);
+    sh    = XDisplayHeight(d, s);
 
     XSelectInput(d,  root, SubstructureRedirectMask);
     XDefineCursor(d, root, XCreateFontCursor(d, 68));
