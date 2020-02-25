@@ -165,7 +165,7 @@ void win_fs(const Arg arg) {
 
     } else {
         XMoveResizeWindow(d, cur->w, cur->wx, cur->wy, cur->ww, cur->wh);
-	}
+    }
 }
 
 void win_to_ws(const Arg arg) {
