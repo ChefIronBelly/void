@@ -1,7 +1,7 @@
 Common subdirectories: a/.git and b/.git
 diff -u a/config.h b/config.h
 --- a/config.h	2020-01-24 10:57:59.364459732 -0500
-+++ b/config.h	2020-01-24 10:31:53.934432861 -0500
++++ b/config.h	2020-02-25 11:15:42.136147583 -0500
 @@ -3,34 +3,45 @@
  
  #define MOD Mod4Mask
@@ -57,32 +57,33 @@ diff -u a/config.h b/config.h
  
      {MOD,           XK_1, ws_go,     {.i = 1}},
      {MOD|ShiftMask, XK_1, win_to_ws, {.i = 1}},
+Only in b/: sowm
 diff -u a/sowm.c b/sowm.c
---- a/sowm.c	2020-01-24 10:52:22.767453954 -0500
-+++ b/sowm.c	2020-01-24 10:31:01.682431964 -0500
-@@ -131,6 +131,30 @@
+--- a/sowm.c	2020-02-22 08:51:48.095431276 -0500
++++ b/sowm.c	2020-02-25 11:17:55.367137355 -0500
+@@ -132,6 +132,30 @@
      XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
  }
  
-+void win_l_fifty() {
++void win_l_fifty(const Arg arg) {
 +    if (!cur) return;
 +
 +    XMoveResizeWindow(d, cur->w, 0 +gap, 0 +gap, sw/2 -gap +mas, sh - 2*gap);
 +}
 +
-+void win_r_fifty() {
++void win_r_fifty(const Arg arg) {
 +    if (!cur) return;
 +
 +    XMoveResizeWindow(d, cur->w, sw/2 +gap + mas, 0 +gap, sw/2 - 2*gap -mas, sh -2*gap);
 +}
 +
-+void win_t_fifty() {
++void win_t_fifty(const Arg arg) {
 +    if (!cur) return;
 +
 +    XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, 0 +gap, sw/2 - 2*gap -mas, sh/2 -gap);
 +}
 +
-+void win_b_fifty() {
++void win_b_fifty(const Arg arg) {
 +    if (!cur) return;
 +
 +    XMoveResizeWindow(d, cur->w, sw/2 +gap +mas, sh/2 +gap, sw/2 - 2*gap -mas, sh/2 - 2*gap);
@@ -91,17 +92,26 @@ diff -u a/sowm.c b/sowm.c
  void win_fs(const Arg arg) {
      if (!cur) return;
  
+@@ -141,7 +165,7 @@
+ 
+     } else {
+         XMoveResizeWindow(d, cur->w, cur->wx, cur->wy, cur->ww, cur->wh);
+-    }
++	}
+ }
+ 
+ void win_to_ws(const Arg arg) {
 diff -u a/sowm.h b/sowm.h
---- a/sowm.h	2020-01-24 10:52:22.767453954 -0500
-+++ b/sowm.h	2020-01-24 10:25:49.572426606 -0500
-@@ -44,6 +44,10 @@
+--- a/sowm.h	2020-02-22 08:51:48.095431276 -0500
++++ b/sowm.h	2020-02-22 09:47:48.568173291 -0500
+@@ -45,6 +45,10 @@
  void run(const Arg arg);
  void win_add(Window w);
  void win_center(const Arg arg);
-+void win_l_fifty();
-+void win_r_fifty();
-+void win_t_fifty();
-+void win_b_fifty();
++void win_l_fifty(const Arg arg);
++void win_r_fifty(const Arg arg);
++void win_t_fifty(const Arg arg);
++void win_b_fifty(const Arg arg);
  void win_del(Window w);
  void win_fs(const Arg arg);
  void win_focus(client *c);
