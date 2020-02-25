@@ -60,7 +60,7 @@ diff -u a/config.h b/config.h
 Only in b/: sowm
 diff -u a/sowm.c b/sowm.c
 --- a/sowm.c	2020-02-22 08:51:48.095431276 -0500
-+++ b/sowm.c	2020-02-25 11:17:55.367137355 -0500
++++ b/sowm.c	2020-02-25 11:31:46.570073543 -0500
 @@ -132,6 +132,30 @@
      XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
  }
@@ -92,15 +92,6 @@ diff -u a/sowm.c b/sowm.c
  void win_fs(const Arg arg) {
      if (!cur) return;
  
-@@ -141,7 +165,7 @@
- 
-     } else {
-         XMoveResizeWindow(d, cur->w, cur->wx, cur->wy, cur->ww, cur->wh);
--    }
-+	}
- }
- 
- void win_to_ws(const Arg arg) {
 diff -u a/sowm.h b/sowm.h
 --- a/sowm.h	2020-02-22 08:51:48.095431276 -0500
 +++ b/sowm.h	2020-02-22 09:47:48.568173291 -0500
@@ -115,4 +106,3 @@ diff -u a/sowm.h b/sowm.h
  void win_del(Window w);
  void win_fs(const Arg arg);
  void win_focus(client *c);
-Only in b/: sowm.o
