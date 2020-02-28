@@ -28,6 +28,7 @@ alias grep='grep --color=auto'
 alias curl='curl -C - -LO'
 alias add='sudo xbps-install -S'
 alias del='sudo xbps-remove'
+alias clean='sudo xbps-remove -Oo'
 alias upd='sudo xbps-install -Su'
 alias search='sudo xbps-query -R'
 
