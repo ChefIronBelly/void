@@ -23,4 +23,5 @@ for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
   done
   echo;
 done
-echo
+
+read -r _
