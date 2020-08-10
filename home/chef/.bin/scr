@@ -11,12 +11,18 @@ file=$scr_dir/$date/$date-$time.jpg
 mkdir -p "$scr_dir/$date"
 
 ffmpeg -y \
-    -hide_banner \
-    -loglevel error \
     -f x11grab \
     -video_size 1920x1080 \
     -i :0.0 \
     -vframes 1 \
-    "$file"
+    "$file" 2>/dev/null
+
+ffmpeg -y \
+    -f x11grab \
+    -video_size 1920x1080 \
+    -i :0.0 \
+    -vframes 1 \
+    "${file%%.jpg}.png" 2>/dev/null
 
 cp -f "$file" "$scr_dir/moneyshot.jpg"
+cp -f "${file%%.jpg}.png" "$scr_dir/moneyshot.png"

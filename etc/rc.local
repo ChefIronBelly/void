@@ -1,0 +1,9 @@
+# Default rc.local for void; add your custom commands here.
+#
+# This is run by runit in stage 2 before the services are executed
+# (see /etc/runit/2).
+
+# Static IP configuration via iproute
+ip link set dev enp3s0 up
+ip addr add 192.168.0.13/24 brd + dev enp3s0
+ip route add default via 192.168.0.1
