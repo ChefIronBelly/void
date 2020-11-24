@@ -4,8 +4,8 @@
 #define MOD Mod4Mask
 
 /* layout(s) */
-static int mas = 54;    /* master area size fudge */
-static int gap = 20;	/* gap around windows */
+static int mas = 54;    /* master area size */
+static int gap = 16;	/* gap around windows */
 
 
 const char* menu[]    = {"dmenu_run",      0};
